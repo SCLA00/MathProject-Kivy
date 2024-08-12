@@ -1,0 +1,33 @@
+
+
+<MenuWidget>:
+    opacity: 0
+    canvas.before:
+        Color:
+            rgba: 0, 0, 0, .8
+        Rectangle:
+            size: self.size
+
+    # Label:
+        # text: root.parent.menu_tile
+        # font_name: 'fonts/DS-DIGI.TTF'
+
+    Button:
+        id: yes_button
+        text: root.parent.menu_button_one
+        font_size: root.height/11
+        font_name: 'fonts/DS-DIGI.TTF'
+        color: 0,1,0 ,1
+        size_hint: .18,.18
+        pos_hint: {'center_x':.4, 'center_y':.3}
+
+        on_press:root.parent.on_menu_button_one_press()
+    Button:
+        id: no_button
+        text: root.parent.menu_button_two
+        font_size: root.height/11
+        font_name: 'fonts/DS-DIGI.TTF'
+        color: 1,0,0 ,1
+        size_hint: .18,.18
+        pos_hint: {'center_x':.6, 'center_y':.3}
+        on_press:root.parent.on_menu_button_two_press(),app.stop()
