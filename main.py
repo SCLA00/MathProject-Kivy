@@ -18,7 +18,7 @@ class MainWidget(RelativeLayout):
     bottom_label = StringProperty('Press Enter')
     menu_widget = ObjectProperty()
 
-    timer = 60
+    timer = 5
     time_toggle = False
 
     firstvalue = None
@@ -101,7 +101,6 @@ class MainWidget(RelativeLayout):
         # make this a while loop do cycle bad math problem for subtraction and division
         while True:
             self.ops = {'+': operator.add, '-': operator.sub, '*': operator.mul, '/': operator.truediv}
-            self.ops = {'/': operator.truediv}
             self.randomOp = random.choice(list(self.ops.keys()))
             self.firstvalue = random.randint(1, 12)
             self.secondvalue = random.randint(1, 12)
@@ -158,6 +157,7 @@ class MainWidget(RelativeLayout):
         self.answer = None
         self.ops = None
         self.randomOp = None
+        self.divisor = None
 
         # Is this needed? Yes Timer doesn't work without it
         Clock.schedule_interval(self.update, 1)
