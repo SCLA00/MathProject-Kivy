@@ -26,6 +26,7 @@ class MainWidget(RelativeLayout):
     answer = None
     ops = None
     randomOp = None
+    divisor = None
 
     list_of_correct = None
     list_of_incorrect = None
@@ -100,6 +101,7 @@ class MainWidget(RelativeLayout):
         # make this a while loop do cycle bad math problem for subtraction and division
         while True:
             self.ops = {'+': operator.add, '-': operator.sub, '*': operator.mul, '/': operator.truediv}
+            self.ops = {'/': operator.truediv}
             self.randomOp = random.choice(list(self.ops.keys()))
             self.firstvalue = random.randint(1, 12)
             self.secondvalue = random.randint(1, 12)
@@ -117,9 +119,10 @@ class MainWidget(RelativeLayout):
                 self.middle_label = f'{self.firstvalue} {self.randomOp} {self.secondvalue}'
                 return self.answer
             elif self.randomOp == '/':
-                if self.firstvalue % self.secondvalue == 0:
-                    self.answer = self.firstvalue / self.secondvalue
-                    self.middle_label = f'{self.firstvalue} {self.randomOp} {self.secondvalue}'
+                self.divisor = self.firstvalue * self.secondvalue
+                if self.divisor % self.secondvalue == 0:
+                    self.answer = self.divisor / self.secondvalue
+                    self.middle_label = f'{self.divisor} {self.randomOp} {self.secondvalue}'
                     return self.answer
 
     def check_answer(self):
@@ -148,7 +151,7 @@ class MainWidget(RelativeLayout):
         self.bottom_label = 'Press Enter'
 
         # Reset the game variables to their initial states
-        self.timer = 60
+        self.timer = 5
         self.time_toggle = False
         self.firstvalue = None
         self.secondvalue = None
@@ -185,7 +188,7 @@ class MainWidget(RelativeLayout):
         ex. init Timer set to False
         press enter set the Timer to True and show math problem
 
-        ---
+        --------------------------------------------------------------------------------------
         should i use a different key to trigger timer, that way the enter key wouldnt work
         unless the timer is set to True??
 
@@ -193,9 +196,17 @@ class MainWidget(RelativeLayout):
 
         i dont know how to trigger both timer and show new_problem. will it effect the end game
         screen.
-        ----
+        --------------------------------------------------------------------------------------
 
         review 3) and the problem solve with unbinding and bind window keyboard
+        --------------------------------------------------------------------------------------
+
+        plan: add a function that saving all the given problem.
+        show the number of right and wrong answer. maybe fraction number? x/y
+
+        maybe added a hidden button to show problem at the end game.
+        color code the right and wrong answer?
+
         '''
 
 
