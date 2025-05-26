@@ -1,24 +1,30 @@
 import operator
 import random
+
+import kivy.uix.popup
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.label import Label
 from kivy.uix.relativelayout import RelativeLayout
+from kivy.uix.popup import Popup
 
 Builder.load_file('menu.kv')
 
 
 class MainWidget(RelativeLayout):
     # not sure if I should use relative or box layout
-    time_label = StringProperty('00')
+    time_label = StringProperty('')
     top_label = StringProperty('')
     middle_label = StringProperty('Welcome')
     bottom_label = StringProperty('Press Enter')
     menu_widget = ObjectProperty()
 
-    timer = 5
+    popup_label = StringProperty('Text place holder here.')
+
+    timer = 60
     time_toggle = False
 
     firstvalue = None
@@ -28,14 +34,16 @@ class MainWidget(RelativeLayout):
     randomOp = None
     divisor = None
 
-    list_of_correct = None
-    list_of_incorrect = None
+    list_of_correct = []
+    list_of_incorrect = []
 
     game_toggle = False
 
     # menu_tile = 'Play Again?'
     menu_button_one = 'Again'
     menu_button_two = 'Quit'
+
+    popup = None
 
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
@@ -96,11 +104,11 @@ class MainWidget(RelativeLayout):
         # clear text on input, after enter has been press
         self.ids.text_input.text = ''
 
-
     def new_question(self):
         # make this a while loop do cycle bad math problem for subtraction and division
         while True:
             self.ops = {'+': operator.add, '-': operator.sub, '*': operator.mul, '/': operator.truediv}
+            # self.ops = {'+': operator.add}
             self.randomOp = random.choice(list(self.ops.keys()))
             self.firstvalue = random.randint(1, 12)
             self.secondvalue = random.randint(1, 12)
@@ -129,11 +137,15 @@ class MainWidget(RelativeLayout):
             # valueError self.answer is int only
             if self.answer == int(self.ids.text_input.text):
                 self.top_label = 'Correct'
+                # save question and user answer on to a list or
+                if self.middle_label not in self.list_of_correct:
+                    self.list_of_correct.append(f'{self.middle_label} = {int(self.ids.text_input.text)}')
                 self.new_question()
             elif self.answer != int(self.ids.text_input.text):
                 self.top_label = 'Wrong'
+                if self.middle_label not in self.list_of_incorrect:
+                    self.list_of_incorrect.append(f'{self.middle_label} = {int(self.ids.text_input.text)}')
                 self.clear_input()
-
         except ValueError:
             print('Invalid Entry')
 
@@ -150,7 +162,7 @@ class MainWidget(RelativeLayout):
         self.bottom_label = 'Press Enter'
 
         # Reset the game variables to their initial states
-        self.timer = 5
+        self.timer = 60
         self.time_toggle = False
         self.firstvalue = None
         self.secondvalue = None
@@ -159,54 +171,31 @@ class MainWidget(RelativeLayout):
         self.randomOp = None
         self.divisor = None
 
+        self.list_of_correct = []
+        self.list_of_incorrect = []
+
         # Is this needed? Yes Timer doesn't work without it
         Clock.schedule_interval(self.update, 1)
 
         # Button are hidden
         self.menu_widget.opacity = 0
 
-
     def on_menu_button_one_press(self):
-        print('Left Button was press')
+        print('game continue by user.')
         self.reset()
 
     def on_menu_button_two_press(self):
-        print('The game quited by user')
+        print('The game quited by user.')
+
+    def on_menu_button_review(self):
+        pass
+
+    def popup_content(self):
+        self.popup_label = ('\n'.join(self.list_of_incorrect))
 
     def note_to_self(self):
         '''
-        my problem is that after the times up the enter still works. In the menu you can
-        see a new math problem appeal in the background.
-        things i have tried,
-        1) disabling and enable text input.
-        2) set the focus to False / True
-        3) play with unbinding, not sure if im using that code correctly
-
-        This problem of showing the show math problem, happen because i set the enter key
-        as the trigger to start the timer and show the math problem.
-
-        ex. init Timer set to False
-        press enter set the Timer to True and show math problem
-
-        --------------------------------------------------------------------------------------
-        should i use a different key to trigger timer, that way the enter key wouldnt work
-        unless the timer is set to True??
-
-        use space?
-
-        i dont know how to trigger both timer and show new_problem. will it effect the end game
-        screen.
-        --------------------------------------------------------------------------------------
-
-        review 3) and the problem solve with unbinding and bind window keyboard
-        --------------------------------------------------------------------------------------
-
-        plan: add a function that saving all the given problem.
-        show the number of right and wrong answer. maybe fraction number? x/y
-
-        maybe added a hidden button to show problem at the end game.
-        color code the right and wrong answer?
-
+        how to make list more readable?
         '''
 
 
